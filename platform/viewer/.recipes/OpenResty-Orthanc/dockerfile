@@ -25,7 +25,7 @@
 # Stage 1: Build the application
 
 # Needs to be pinned at 16.x for now because of https://github.com/webpack/webpack/issues/14532
-FROM node:lts-slim as builder
+FROM node:16-slim as builder
 
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
@@ -50,6 +50,7 @@ RUN apk add --no-cache openssl
 RUN apk add --no-cache openssl-dev
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc
+RUN apk add --no-cache libssl1.1
 # !!!
 RUN luarocks install lua-resty-openidc
 
@@ -59,7 +60,7 @@ RUN luarocks install lua-resty-session
 RUN luarocks install lua-resty-http
 # !!!
 RUN luarocks install lua-resty-openidc
-RUN luarocks install luacrypto
+RUN luarocks install luasec
 
 # Copy build output to image
 COPY --from=builder /usr/src/app/platform/viewer/dist /var/www/html
